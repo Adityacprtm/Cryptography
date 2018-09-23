@@ -1,3 +1,5 @@
+#github.com/adityacprtm
+
 get_cipher <- function(input, M){
 	cipher <- NULL
 	pos <- strsplit(input,"")

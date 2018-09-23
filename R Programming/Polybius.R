@@ -1,11 +1,16 @@
+#github.com/Adityacprtm
+
+# Fungsi Enkripsi
 encrypt <- function(input,M){
 	cipher <- NULL
 	# split per char
 	pos <- strsplit(input,"")
 	for (i in 1:nchar(input)){
+		# If char is I or J get row 2 and col 4
 		if (pos[[1]][i] == "J" || pos[[1]][i] == "I"){
 			cipher <- paste(cipher,2,4)
 		}
+		# get row and col from table
 		for (j in 1:5){
 			for (k in 1:5){
 				if (pos[[1]][i] == M[j,k]){
@@ -25,6 +30,7 @@ decrypt <- function(cipher,M){
 	for (i in 1:nchar(cipher)){
 		# lookin for i odd
 		if (i%%2==1){
+			# convert as numeric
 			row <- as.numeric(pos[[1]][i])
 			col <- as.numeric(pos[[1]][i+1])
 			if (M[row,col] == "I/J"){
