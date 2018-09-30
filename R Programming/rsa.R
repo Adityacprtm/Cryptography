@@ -42,9 +42,9 @@ setup <- function(p,q) {
     q <- as.numeric(q)
     #is prime?
     if (!(isPrime(p) && isPrime(q))){
-        stop("nilai p dan q harus prima")
+        stop("p and q must be prime")
     }else if (p == q) {
-        stop("nilai p dan q tidak boleh sama")
+        stop("p and q cannot be equal")
     }
     # value n
     n <- p * q
@@ -103,19 +103,19 @@ decrypt <- function(pk, ciphertext) {
 
 main <- function() {
     cat("RSA Encrypt / Decrypt\n")
-    cat("Input Prime: ")
+    cat("Enter a prime number: ")
     p <- readline()
-    cat("Another Prime: ")
+    cat("Enter another prime number: ")
     q <- readline()
     key <- setup(p,q)
     cat("Generating your public/private keypairs now . . .\n")
     cat(sprintf("Your public key is (%s,%s) and your private key is (%s,%s)\n", key$public[1], key$public[2], key$private[1], key$private[2]))
     cat("Enter a number to encrypt: ")
-    input <- readline()
+    input <- c(readline())
     cipher <- encrypt(key$public,input)
-    cat(sprintf("Your encrypted message is:%s\n",cipher))
+    cat(sprintf("Your encrypted message is: %s\n",cipher))
     plain <- decrypt(key$private,cipher)
-    cat(sprintf("Your decrypted message is:%s\n",plain))
+    cat(sprintf("Your decrypted message is: %s\n",plain))
 }
 
 main()
