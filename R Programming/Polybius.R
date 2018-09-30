@@ -1,4 +1,4 @@
-#github.com/Adityacprtm
+# Author -> github.com/Adityacprtm
 
 # Fungsi Enkripsi
 encrypt <- function(input,M){

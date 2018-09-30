@@ -1,4 +1,4 @@
-#github.com/adityacprtm
+# Author -> github.com/adityacprtm
 
 get_cipher <- function(input, M){
 	cipher <- NULL

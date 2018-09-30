@@ -1,3 +1,5 @@
+# Author -> github.com/Adityacprtm
+
 isPrime <- function(num) {
     num <- as.numeric(num)
     if (num == 2) {
@@ -48,7 +50,7 @@ setup <- function(p,q) {
         e <- sample(2:phi,1,replace=FALSE)
         g <- gcd(e,phi)
     }
-
+    
     d = euclidean(e, phi)
 
     my_list <- list("public"=c(e,n),"private"=c(d,n))
