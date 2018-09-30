@@ -65,7 +65,6 @@ setup <- function(p,q) {
         }
     }
 
-
     #cat(sprintf("Available e numbers: %s\n",paste(e,collapse=" ")))
     e <- sample(e,1)
     #cat(sprintf("Your e number: %s\n",e))
