@@ -1,5 +1,6 @@
 # Author -> github.com/Adityacprtm
 
+# is it prime function
 isPrime <- function(num) {
     num <- as.numeric(num)
     if (num == 2) {
@@ -11,50 +12,71 @@ isPrime <- function(num) {
     }
 }
 
+# gcd function to find value e
 gcd <- function(a,b) {
     a <- as.numeric(a)
     b <- as.numeric(b)
     r <- a%%b;
-    return(ifelse(r, gcd(b, r), b))
+    gcd <- ifelse(r, gcd(b, r), b)
+    return(gcd)
 }
 
+# function to find value d
 euclidean <- function(e,phi) {
     e <- as.numeric(e)
     phi <- as.numeric(phi)
-    for (i in 1:100) {
+    x <- NULL
+    d <- NULL
+    for (i in 1:phi) {
         x <- (e * i) %% phi
         if (x == 1){
-            break
+            d <- paste(c(d,i))
         }
     }
-    return(i)
+    return(d)
 }
 
+# setup all need
 setup <- function(p,q) {
     p <- as.numeric(p)
     q <- as.numeric(q)
+    #is prime?
     if (!(isPrime(p) && isPrime(q))){
         stop("nilai p dan q harus prima")
     }else if (p == q) {
         stop("nilai p dan q tidak boleh sama")
     }
-
+    # value n
     n <- p * q
-
+    # totient
     phi <- (p-1) * (q-1)
-
-    e <- sample(2:phi,1,replace=FALSE)
-
-    g <- gcd(e,phi)
-    while (g != 1){
-        e <- sample(2:phi,1,replace=FALSE)
-        g <- gcd(e,phi)
-    }
+    # temporary list of e
+    temp_e <- 2:phi
     
-    d = euclidean(e, phi)
+    #print(temp_e)
+    
+    # find value e if result from gcd = 1
+    g <- NULL
+    e <- NULL
+    for (i in 2:length(temp_e)) {
+        g <- gcd(i,phi)
+        if (g == 1) {
+            e <- paste(c(e,i))
+        }
+    }
+
+
+    #cat(sprintf("Available e numbers: %s\n",paste(e,collapse=" ")))
+    e <- sample(e,1)
+    #cat(sprintf("Your e number: %s\n",e))
+
+    d <- euclidean(e, phi)
+    #cat(sprintf("Available d numbers: %s\n",paste(d,collapse=" ")))
+    d <- sample(d,1)
+    #cat(sprintf("Your d number: %s\n",d))
 
     my_list <- list("public"=c(e,n),"private"=c(d,n))
-    return (my_list)
+    return(my_list)
 }
 
 encrypt <- function(pk, plaintext) {
@@ -81,15 +103,15 @@ decrypt <- function(pk, ciphertext) {
 }
 
 main <- function() {
-    print("RSA Encrypt / Decrypt")
+    cat("RSA Encrypt / Decrypt\n")
     cat("Input Prime: ")
     p <- readline()
     cat("Another Prime: ")
     q <- readline()
     key <- setup(p,q)
-    print("Generating your public/private keypairs now . . .")
+    cat("Generating your public/private keypairs now . . .\n")
     cat(sprintf("Your public key is (%s,%s) and your private key is (%s,%s)\n", key$public[1], key$public[2], key$private[1], key$private[2]))
-    cat("Enter a message to encrypt: ")
+    cat("Enter a number to encrypt: ")
     input <- readline()
     cipher <- encrypt(key$public,input)
     cat(sprintf("Your encrypted message is:%s\n",cipher))
