@@ -1,16 +1,20 @@
 list.of.packages <- c("digest", "httr","jsonlite")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
+
 require(digest)
 require(jsonlite)
 require(httr)
+
 Blockchain <- function ()
 {
+  
   bc = list (
     chain = list(),
     currentTransactions  = list(),
     nodes = list()
   )
+  
   #' Create a new Block in the Blockchain
   #'
   #' @param proof <int> The proof given by the Proof of Work algorithm
@@ -21,11 +25,12 @@ Blockchain <- function ()
   #' blockchain$nextBlock(previousHash=1, proof=100) # genesis block
   bc$nextBlock = function (proof, previousHash=NULL){
     previousHash <- ifelse (is.null(previousHash), bc$hashBlock(bc$chain[length(bc$chain)]), previousHash)
-    block = list('block' = list('index' = length (bc$chain) + 1, 'timestamp' = as.numeric(Sys.time()) , 'transactions' =  bc$currentTransactions, 'proof' = proof, 'previousHash' = previousHash))
+    block = list('block' = list('index' = length (bc$chain) + 1, 'timestamp' = as.numeric(gsub("[: -]", "" , Sys.time())) , 'transactions' =  bc$currentTransactions, 'proof' = proof, 'previousHash' = previousHash))
     bc$currentTransactions = NULL
     bc$chain <- append(bc$chain, block)
     return (block)
   }
+  
   #' Returns the last block in the Blockchain
   #'
   #' @examples  
@@ -33,6 +38,7 @@ Blockchain <- function ()
   bc$lastBlock = function () {
     bc$chain[length(bc$chain)]
   }
+  
   #' Register a new transaction in the Blockchain
   #'
   #' @param sender <str> address of the sender
@@ -46,6 +52,7 @@ Blockchain <- function ()
     last.block <- bc$lastBlock()
     return(last.block$block$index + 1)
   }
+  
   #' Hash a block using SHA256
   #'
   #' @param block <block> 
@@ -55,7 +62,7 @@ Blockchain <- function ()
     require(digest)
     digest(block,algo="sha256")
   }
-   
+  
   #' Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
   #' p is the previous proof and p' is the new proof
   #' @param last_proof <block> 
@@ -69,7 +76,7 @@ Blockchain <- function ()
     }
     return (proof)
   }
- 
+  
   #' Find a number p' such that hash(pp') ends with two zeroes, where p is the previous p'
   #' p is the previous proof and p' is the new proof
   #' @param last_proof <int> previous proof 
@@ -81,6 +88,7 @@ Blockchain <- function ()
     guess_hash = digest(guess, algo = 'sha256')
     return (gsub('.*(.{2}$)', '\\1',guess_hash) == "00")
   }
+  
   #' Checks whether a given blockchain is valid
   #'
   #' @return  <bool> TRUE if the chain is valid, FALSE otherwise
@@ -105,6 +113,7 @@ Blockchain <- function ()
     }
     return(TRUE)
   }
+  
   #' Add a new node to the list of existing nodes
   #' 
   #' @param address <str> full URL of the node  
@@ -116,6 +125,7 @@ Blockchain <- function ()
     parsed_url = address
     bc$nodes<- append(bc$nodes, parsed_url)
   }
+  
   #' Resolve conflicts by replacing the current chain by the longest chain in the network
   #'
   #' @return  <bool> TRUE if the chain was replaced, FALSE otherwise
@@ -140,6 +150,7 @@ Blockchain <- function ()
       bc$chain <- new_chain 
     }
   }
+  
   # Adding bc to the environment
   bc <- list2env(bc)
   class(bc) <- "BlockchainClass"

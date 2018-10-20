@@ -1,17 +1,18 @@
 list.of.packages <- c("uuid")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
- 
+
 require(uuid)
 # make sure you put the path of your blockchain.R file
-source('D:/GitHub/Cryptography/R Programming/Blockchain/blockchain.R')
- 
+source('blockchain.R')
+
 # Generate a globally unique address for this node
 node_identifier = gsub('-','',UUIDgenerate())
 # Instantiate the Blockchain
 blockchain = Blockchain()
 # genesis block
 blockchain$nextBlock(previousHash=1, proof=100)
+
 #* @serializer custom_json
 #* @post /transactions/new
 function(req)
@@ -19,23 +20,24 @@ function(req)
   #eg req_json <- '{"sender": "my address", "recipient": "someone else address", "amount": 5}'
   #values <- jsonlite::fromJSON(req_json)
   values <- jsonlite::fromJSON(req$postBody)
- 
+  
   # Check that the required fields are in the POST'ed data
   required = c('sender','recipient', 'amount')
   if (!all(required %in% names(values))) {
     return ('Missing Values - sender, recipient and amount are required')
   }
   index = blockchain$addTransaction(values$sender, values$recipient, values$amount)
-   
+  
   list('message' = paste('Transaction will be added to Block', index))
 }
- 
+
 #* @serializer custom_json
 #* @get /chain
 function(req)
 {
   list('chain'=blockchain$chain, 'length'=length(blockchain$chain))
 }
+
 #* @serializer custom_json
 #* @get /mine
 function(req)
@@ -44,22 +46,23 @@ function(req)
   lastBlock = blockchain$lastBlock()
   lastProof = lastBlock$block$proof
   proof = blockchain$proofOfWork(lastProof)
-   
+  
   # We must receive a reward for finding the proof.
   # The sender is "0" to signify that this node has mined a new coin.
   blockchain$addTransaction(sender="0",recipient = node_identifier, amount=1)
- 
+  
   # Forge the new block by adding it to the chain
   previousHash = blockchain$hashBlock(lastBlock)
   block = blockchain$nextBlock(proof, previousHash)
   list('message'='New block forged', 'index'= block$block$index, 'transactions'= block$block$transactions, 'proof'=block$block$proof,'previousHash'=block$block$previousHash)
-#  list('message'='New block forged', c('index'= block$block$index, 'transactions'= block$block$transactions, 'proof'=block$block$proof,'previousHash'=block$block$previousHash))
+  #  list('message'='New block forged', c('index'= block$block$index, 'transactions'= block$block$transactions, 'proof'=block$block$proof,'previousHash'=block$block$previousHash))
 }
+
 #* @serializer custom_json
 #* @post /nodes/register
 function (req)
 {
-#  req_json <- '{"sender": "my address", "recipient": "someone else address", "amount": 5}'
+  #  req_json <- '{"sender": "my address", "recipient": "someone else address", "amount": 5}'
   values <- jsonlite::fromJSON(req$postBody)
   nodes <-  values$nodes
   if (is.null(nodes))
@@ -72,6 +75,7 @@ function (req)
   }
   TRUE
 }
+
 #* @serializer custom_json
 #* @get /nodes/resolve
 function (req)
@@ -84,6 +88,7 @@ function (req)
     list('message'='Authoritative block chain - not replaceable ', 'chain'=blockchain$chain)
   }
 }
+
 #* Log some information about the incoming request
 #* @filter logger
 function(req){
@@ -92,12 +97,13 @@ function(req){
       req$HTTP_USER_AGENT, "@", req$REMOTE_ADDR, "\n")
   plumber::forward()
 }
+
 #* @get /chain/show
 #* @html
 function(req)
 {
   render.html <- ""
-   
+  
   paste0(render.html, '<br>')
   render.html <- paste0(render.html, 'Current transactions:<br>')
   for (i in 1:length(blockchain$currentTransactions))
