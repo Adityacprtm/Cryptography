@@ -42,14 +42,15 @@ gen_new_block <- function(previous_block) {
 }
 
 # Define Genesis Block (index 1 and arbitrary previous hash)
-block_genesis <-  list(
+block_genesis <- list(
   index = 1,
   timestamp = Sys.time(),
   data = "Genesis Block",
   previous_hash = "0",
   proof = 1)
+block_genesis_hash <- hash_block(block_genesis)
 
-blockchain <- list(block_genesis)
+blockchain <- list(block_genesis_hash)
 previous_block <- blockchain[[1]]
 
 # How many blocks should we add to the chain after the genesis block
@@ -60,6 +61,14 @@ for (i in 1:num_of_blocks_to_add) {
   block_to_add <- gen_new_block(previous_block)
   blockchain[i + 1] <- list(block_to_add)
   previous_block <- block_to_add
-  
-  print(cat(paste0("Block ", block_to_add$index," has been added","\n","\t","Proof: ",block_to_add$proof,"\n","\t","Hash: ",block_to_add$new_hash)))
+  cat(paste0("Added block ",block_to_add$index," ...\n"))
+}
+
+# show the Blockchain
+cat("\nBLOCKCHAIN")
+for (i in 1:length(blockchain)) {
+  if (blockchain[[i]]$data == "Genesis Block") {
+    blockchain[[i]]$index <- "Genesis"
+  }
+  cat(paste0("\nBlock ", blockchain[[i]]$index,"\n","\t","Proof: ",blockchain[[i]]$proof,"\n","\t","Hash: ",blockchain[[i]]$new_hash,"\n","\t","Prev Hash: ",blockchain[[i]]$previous_hash))
 }
