@@ -26,6 +26,10 @@ setup <- function(p,g,x) {
         stop("g must be smaller than p")
     }
 
+    if (x < 0) {
+        stop("Secret key (X) must be integers greater than 0")
+    }
+
     # Calculated with formula
     y <- (g^x) %% p
 
