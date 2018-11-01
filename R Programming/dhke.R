@@ -38,7 +38,7 @@ main <- function() {
     p <- readline()
     cat("Enter a number as g: ")
     g <- readline()
-    cat("\n")
+    cat(sprintf("Alice and Bob agree to use modulus p = %s and g = %s\n\n",p,g))
     # enter secret key Alice and Bob
     cat("Alice Scret Key: ")
     xa <- readline()
