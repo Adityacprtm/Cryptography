@@ -364,7 +364,7 @@ main <- function() {
         }
     }
 
-    decryption(ciphertext, key_scheduling)
+    #decryption(ciphertext, key_scheduling)
 }
 
 main()
