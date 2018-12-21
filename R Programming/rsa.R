@@ -1,5 +1,3 @@
-# Author -> github.com/Adityacprtm
-
 # is it prime function
 isPrime <- function(num) {
     num <- as.numeric(num)
@@ -118,4 +116,5 @@ main <- function() {
     cat(sprintf("Your decrypted message is: %s\n",plain))
 }
 
+#github.com/Adityacprtm
 main()

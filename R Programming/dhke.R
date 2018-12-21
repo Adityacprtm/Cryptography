@@ -59,4 +59,6 @@ main <- function() {
     cat(sprintf("   Alice Shared Key: %s\n",aliceSharedKey))
     cat(sprintf("   Bob Shared Key: %s\n",bobSharedKey))
 }
+
+#github.com/adityacprtm
 main()

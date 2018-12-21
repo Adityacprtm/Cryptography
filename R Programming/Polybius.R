@@ -1,5 +1,3 @@
-# Author -> github.com/Adityacprtm
-
 # Fungsi Enkripsi
 encrypt <- function(input,M){
 	cipher <- NULL
@@ -72,4 +70,5 @@ polybius <- function() {
 	cat(sprintf("Plaintext> %s\n",plain))
 }
 
+#github.com/Adityacprtm
 polybius()

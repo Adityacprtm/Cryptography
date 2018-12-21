@@ -1,4 +1,3 @@
-# Author -> github.com/adityacprtm
 get_cipher <- function(input, M){
 	cipher <- NULL
 	pos <- strsplit(input,"")
@@ -67,4 +66,5 @@ bifid <- function() {
 	cat(sprintf("Ciphertext> %s\n",cipher))
 }
 
+#github.com/adityacprtm
 bifid()
